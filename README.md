@@ -1,104 +1,78 @@
-# Healthcare Analytics dbt Project: Weight Loss & BMI Transformation
+# 🏥 Healthcare Analytics dbt Project: Weight Loss & BMI Transformation
 
 ## 📌 Project Overview
-This dbt project transforms raw patient measurement data into actionable clinical insights. It focuses on:
-- Tracking user progress through a weight-loss program  
-- Identifying medical "success" milestones  
-- Analyzing long-term user retention  
+This dbt project turns raw patient measurement data into actionable insights. It helps track user progress, measure success milestones, and analyze long-term retention.
 
-### Key Business Questions Answered:
-- **Clinical Efficacy:** What percentage of users achieve a 5% weight loss (medical benchmark for success)?  
-- **Health Migration:** Are users moving from high-risk BMI categories (Obese) to lower-risk categories (Overweight/Healthy)?  
-- **Program Stickiness:** How long do users stay active after their initial weigh-in?  
+**Key Questions Answered:**
+- **Clinical Efficacy:** What percentage of users achieve ≥5% weight loss?  
+- **Health Migration:** Are users moving from high-risk BMI categories (Obese) to lower-risk categories?  
+- **Program Stickiness:** How long do users stay active after their first weigh-in?
 
 ---
 
-## 🏗 Data Architecture & Lineage
+## 🏗 Data Architecture
 
-The project follows a modular dbt structure:
+The project follows a modular dbt structure:  
 
-### 1. Staging Layer (`models/staging/`)
+### 1️⃣ Staging Layer (`models/staging/`)
 - **measurements_staging:** Cleans raw weight and height logs  
 - **users_staging:** Standardizes user metadata and demographics  
 
-### 2. Intermediate Layer (`models/intermediate/`)
-- **user_initial_bmi:**  
-  The "Ground Truth" table.  
-  Identifies the first valid weight and height for each user to establish a baseline.  
+### 2️⃣ Intermediate Layer (`models/intermediate/`)
+- **user_initial_bmi:** Establishes the baseline for each user using their first valid weight and height  
 
-### 3.Mart 
+### 3️⃣ Marts / Core Layer
 
-## The Star Schema (Core Layer)
+#### Star Schema
 
-To ensure **data integrity** and **fast queries**, we structure our warehouse using a **Star Schema**.  
+We use a **Star Schema** for fast queries and data integrity.
 
----
+**Dimension Tables:**
+- **dim_user:** Patient demographics (Gender, Age, Signup Date)  
+- **date_dim:** Centralized calendar for time-series analysis and cohort grouping  
 
-#  Dimension Tables (The Context)
-
-- **dim_user:** The single source of truth for patient demographics, including **Gender, Age, Signup Date**.  
-- **date_dim:** A centralized calendar table that enables smooth **time-series analysis** and **cohort grouping**.  
+**Fact Tables:**
+- **fact_weight_and_bmi_progress:** Tracks every measurement event, calculates BMI, and records weight change from baseline. This table powers most analytics and reports.  
 
 ---
 
-#  Fact Tables (The Observations)
-
-- **fact_weight_and_bmi_progress:** The core fact table that records **every measurement event**.  
-  - Calculates the **BMI at each measurement**  
-  - Tracks **weight change relative to each user’s baseline**  
-  - Serves as the foundation for most analytics and reporting in the project
-
-## 🌟 The Five Core Analytics Models
-
-In the **Marts layer**, raw data transforms into actionable business insights. We've designed **five specialized models** to answer key questions about user progress, health outcomes, and program engagement.  
-
----
+## 🌟 Core Analytics Models (Marts Layer)
 
 ### 1️⃣ Clinical Success Outcomes (`fct_user_success_outcomes.sql`)
 - **Metric:** % of Users Achieving Clinical Success  
-- **What it Measures:** Tracks the percentage of users who hit the **gold standard of ≥5% weight loss** from their starting weight.  
-- **Why it Matters:** Shows stakeholders and health providers the **effectiveness of the program** in delivering meaningful health outcomes.  
-
----
+- **What it Measures:** Users reaching ≥5% weight loss from baseline  
+- **Why it Matters:** Demonstrates program effectiveness to stakeholders  
 
 ### 2️⃣ Monthly Retention Cohorts (`fct_monthly_retention_cohorts.sql`)
 - **Metric:** Retention Rate per Month  
-- **What it Measures:** Groups users by their “birth month” (Month 0) and checks who stays active (logs weight) in subsequent months.  
-- **Why it Matters:** Helps identify the **churn cliff** — the point when users typically stop engaging — so we can improve program stickiness.  
-
----
+- **What it Measures:** Tracks active users month-over-month from their first measurement  
+- **Why it Matters:** Identifies churn points to improve engagement  
 
 ### 3️⃣ Gender Health Distribution (`fct_gender_monthly_health_distribution.sql`)
 - **Metric:** Average BMI by Gender  
-- **What it Measures:** Aggregates BMI categories and weight loss trends, broken down by gender and program week.  
-- **Why it Matters:** Reveals if certain demographic groups respond better, helping **tailor coaching and content** for maximum impact.  
-
----
+- **What it Measures:** BMI and weight loss trends by gender and program week  
+- **Why it Matters:** Helps tailor coaching for specific demographics  
 
 ### 4️⃣ Weight Loss Velocity Analysis (`fct_weight_loss_analysis.sql`)
 - **Metric:** Average KG Lost per Week  
-- **What it Measures:** Calculates the speed of weight loss, monitoring for healthy, sustainable progress versus risky crash-diets.  
-- **Why it Matters:** Flags **plateaus or unsafe trends**, ensuring users lose weight safely and consistently.  
-
----
+- **What it Measures:** Tracks the speed of weight loss to ensure healthy progress  
+- **Why it Matters:** Detects plateaus or unsafe trends  
 
 ### 5️⃣ Member Monthly Snapshot (`member_month.sql`)
 - **Metric:** Current Status / Ending BMI  
-- **What it Measures:** Captures where each user stands at the end of every month — final weight, BMI category, and total change.  
-- **Why it Matters:** Supports **financial reporting** and **monthly active user tracking**, helping the business plan and forecast accurately.  
+- **What it Measures:** User weight, BMI, and change at the end of each month  
+- **Why it Matters:** Supports financial reporting and monthly active user tracking  
+
+---
 
 ## 🚀 How to Run This Project
 
 ### Prerequisites
-- Snowflake account (or any supported data warehouse)  
+- Snowflake account (or other supported data warehouse)  
 - dbt Core or dbt Cloud installed  
 
 ### Setup
 
-#### 1. Clone the repository
+1. **Clone the repository**
 ```bash
 git clone https://github.com/bhupesh66/dbt_assignment.git
-
-Run the pipeline
-
-dbt build
