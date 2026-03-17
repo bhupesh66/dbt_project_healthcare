@@ -1,15 +1,4 @@
-Welcome to your new dbt project!
-
-### Using the starter project
-
-Try running the following commands:
-- dbt run
-- dbt test
-
-
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+🏥 Healthcare Analytics dbt Project: Weight Loss & BMI Transformation📌 Project OverviewThis dbt project transforms raw patient measurement data into actionable clinical insights. It focuses on tracking user progress through a weight-loss program, identifying medical "success" milestones, and analyzing long-term user retention.Key Business Questions Answered:Clinical Efficacy: What percentage of our users achieve a 5% weight loss (the medical benchmark for success)?Health Migration: Are users moving from high-risk BMI categories (Obese) to lower-risk categories (Overweight/Healthy)?Program Stickiness: How long do users stay active in the program after their initial weigh-in?🏗 Data Architecture & LineageThe project follows a modular dbt structure (Staging -> Intermediate -> Marts):1. Staging Layer (models/staging/)measurements_staging: Cleanses raw weight and height logs.users_staging: Standardizes user metadata and demographics.2. Intermediate Layer (models/intermediate/)user_initial_bmi: The "Ground Truth" table. It identifies the first valid weight and height for every user to establish a baseline.3. Marts Layer (models/marts/)fact_weight_and_bmi_progress: A grain-per-user-per-week table. It calculates weekly BMI and cumulative weight change from the baseline.fct_user_success_outcomes: Measures clinical success.Metric: pct_clinical_success (% users with ≥5% weight loss).Metric: pct_category_improvement (% users moving to a better BMI class).fct_monthly_retention_cohorts: A cohort analysis model that tracks user "survival" rates month-over-month.📈 Key Analytics LogicThe "Success" DefinitionWe define success using two clinical lenses:Relative Weight Loss: (Current Weight - Initial Weight) / Initial Weight. A result $\le -5\%$ is flagged as a clinical success.BMI Migration: We track when a user's bmi_category changes (e.g., from Obese Class II $\rightarrow$ Obese Class I).Retention LogicUsers are grouped into monthly cohorts based on their first measurement date. Retention is calculated by checking for at least one weight log in subsequent months relative to Month 0.🚀 How to Run This ProjectPrerequisitesSnowflake account (or relevant Data Warehouse)dbt Core or dbt Cloud installedSetupClone the repository:Bashgit clone https://github.com/bhupesh66/dbt_assignment.git
+Install dependencies:Bashdbt deps
+Run the pipeline:Bashdbt build
+🧪 Data Quality & TestingUnique Keys: Every fact and dim table is tested for unique primary keys.Relationship Tests: Ensures every measurement in the fact table maps back to a valid user in the dimension table.Value Ranges: BMI calculations are monitored to ensure they fall within realistic physiological ranges.
