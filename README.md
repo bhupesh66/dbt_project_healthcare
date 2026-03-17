@@ -26,6 +26,28 @@ The project follows a modular dbt structure:
   The "Ground Truth" table.  
   Identifies the first valid weight and height for each user to establish a baseline.  
 
+### 3.Mart 
+
+## The Star Schema (Core Layer)
+
+To ensure **data integrity** and **fast queries**, we structure our warehouse using a **Star Schema**.  
+
+---
+
+#  Dimension Tables (The Context)
+
+- **dim_user:** The single source of truth for patient demographics, including **Gender, Age, Signup Date**.  
+- **date_dim:** A centralized calendar table that enables smooth **time-series analysis** and **cohort grouping**.  
+
+---
+
+#  Fact Tables (The Observations)
+
+- **fact_weight_and_bmi_progress:** The core fact table that records **every measurement event**.  
+  - Calculates the **BMI at each measurement**  
+  - Tracks **weight change relative to each user’s baseline**  
+  - Serves as the foundation for most analytics and reporting in the project
+
 ## 🌟 The Five Core Analytics Models
 
 In the **Marts layer**, raw data transforms into actionable business insights. We've designed **five specialized models** to answer key questions about user progress, health outcomes, and program engagement.  
