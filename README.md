@@ -3,10 +3,19 @@
 ## 📌 Project Overview
 This dbt project turns raw patient measurement data into actionable insights. It helps track user progress, measure success milestones, and analyze long-term retention.
 
-**Key Questions Answered:**
-- **Clinical Efficacy:** What percentage of users achieve ≥5% weight loss?  
-- **Health Migration:** Are users moving from high-risk BMI categories (Obese) to lower-risk categories?  
-- **Program Stickiness:** How long do users stay active after their first weigh-in?
+The given data/ source tables ie. users, cases, measurements are append only, meaning everytime a record is updated in production a new row is inserted. Nothing is changed in previous data.
+
+This means a user who has changed their status, let's say 4 times, has 4 rows in users table. The table is ever growing.
+
+Here, we will approach this project with 3 layer architecture, medallion architecture of bronze (staging), silver (intermediate) and gold (marts).
+
+Staging/bronze is where we deduplicate the source table, rename columns, cast types, basically a data cleaning stage. No business logic is written in this stage and is materialised as a View.
+
+Intermediate/ silver is where we write business logics which is the building blocks of the whole project and is also materialised as a view.
+
+Marts/ gold layer is where answer ready facts table are stored and is the answer we are looking for. This layer is consumed by analysts for reporting and BI tools and is materialised as a Table.We have also done dimensional modelling(fact and dimensional table ) here along with all metrics in aggregated fact table.
+
+
 
 ---
 
