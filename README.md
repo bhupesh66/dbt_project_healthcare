@@ -19,7 +19,7 @@ Marts/ gold layer id divided into two part one is fact and dim table and another
 
 ---
 
-## 🏗 Data Architecture
+##  Data Architecture
 
 The project follows a modular dbt structure:  
 
@@ -45,7 +45,7 @@ We use a **Star Schema** for fast queries and data integrity.
 
 ---
 
-## 🌟 Core Analytics Models (Marts Layer)
+##  Core Analytics Models (Marts Layer)
 
 ### 1️⃣ Clinical Success Outcomes (`fct_user_success_outcomes.sql`)
 - **Metric:** % of Users Achieving Clinical Success  
