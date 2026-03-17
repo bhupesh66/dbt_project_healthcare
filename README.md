@@ -70,7 +70,7 @@ We use a **Star Schema** for fast queries and data integrity.
 - **Metric:** Current Status / Ending BMI  
 - **What it Measures:** User weight, BMI, and change at the end of each month  
 
-
+We have implemented quality and validation checks defined in schema.yml, including tests for null values, uniqueness, and negative data.
 ---
 
 ##  How to Run This Project
