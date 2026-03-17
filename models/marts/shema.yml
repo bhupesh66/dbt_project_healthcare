@@ -1,0 +1,82 @@
+version: 2
+
+models:
+  # ── Staging ────────────────────────────────────────────────
+  - name: users_stagging
+    description: "Cleaned and deduplicated user metadata."
+    columns:
+      - name: analytics_id
+        tests: [unique, not_null]
+      - name: gender
+        tests:
+          - accepted_values:
+              values: ['male', 'female', 'other']
+
+  - name: measurements_stagging
+    description: "Raw measurement logs for weight and height."
+    columns:
+      - name: analytics_id
+        tests: [not_null]
+      - name: measurement_type
+        tests:
+          - accepted_values:
+              values: ['weight', 'height']
+
+  # ── Intermediate ──────────────────────────────────────────
+  - name: user_initial_bmi
+    description: "Calculates the first recorded BMI and baseline weight for each user."
+    columns:
+      - name: analytics_id
+        tests: [unique, not_null]
+      - name: initial_weight
+        tests: [not_null]
+
+  # ── Marts (Core Star Schema) ──────────────────────────────
+  - name: dim_user
+    description: "Dimensional table for user demographics."
+    columns:
+      - name: analytics_id
+        tests: [unique, not_null]
+
+  - name: fact_weight_and_bmi_progress
+    description: "Atomic-level fact table tracking every BMI change over time."
+    columns:
+      - name: analytics_id
+        tests: [not_null]
+      - name: bmi_category
+        tests:
+          - accepted_values:
+              values: ['Underweight', 'Healthy Weight', 'Overweight', 'Obese Class I', 'Obese Class II', 'Obese Class III']
+
+  # ── Marts (Aggregated Facts) ──────────────────────────────
+  - name: fct_user_success_outcomes_
+    description: "Aggregated success metrics: % Clinical Success and % Category Improvement."
+    columns:
+      - name: analytics_id
+        tests: [unique, not_null]
+
+  - name: fct_monthly_retention_cohorts
+    description: "Cohort analysis tracking user survival rates by signup month."
+    columns:
+      - name: cohort_month
+        tests: [not_null]
+      - name: retention_rate
+        description: "Percentage of the original cohort still active."
+
+  - name: fct_weight_loss_analysis
+    description: "Weekly velocity of weight loss per user."
+    columns:
+      - name: avg_weekly_loss_kg
+        description: "Speed of weight loss to ensure clinical safety."
+
+  - name: fct_gender_monthly_health_distribution
+    description: "Demographic breakdown of health outcomes."
+    columns:
+      - name: gender
+        tests: [not_null]
+
+  - name: member_month
+    description: "Monthly snapshots of active members and their health status."
+    columns:
+      - name: month_end_date
+        tests: [not_null]
