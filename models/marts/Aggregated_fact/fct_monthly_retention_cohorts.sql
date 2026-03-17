@@ -33,11 +33,22 @@ cohort_counts AS (
     join activity a ON c.analytics_id = a.analytics_id
     group by 1, 2
 )
+,
+cohort_sizes AS (
+    -- Total users in Month 0 for each cohort
+    SELECT
+        cohort_month,
+        COUNT(DISTINCT analytics_id) AS cohort_size
+    FROM cohort_setup
+    GROUP BY cohort_month
+)
 
-select
-     cohort_month,
-    month_number,
-    active_customers,ROUND(active_customers * 100.0 / 
-        MAX(active_customers) OVER (PARTITION BY cohort_month), 1) AS retention_rate
-from cohort_counts
-order by  cohort_month, month_number
+SELECT
+    cc.cohort_month,
+    cc.month_number,
+    cc.active_customers,
+    ROUND(cc.active_customers * 100.0 / cs.cohort_size, 1) AS retention_rate
+FROM cohort_counts cc
+JOIN cohort_sizes cs
+    ON cc.cohort_month = cs.cohort_month
+ORDER BY cc.cohort_month, cc.month_number
