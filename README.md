@@ -47,26 +47,26 @@ We use a **Star Schema** for fast queries and data integrity.
 
 ##  Core Analytics Models (Marts Layer)
 
-### 1️⃣ Clinical Success Outcomes (`fct_user_success_outcomes.sql`)
+### 1 Clinical Success Outcomes (`fct_user_success_outcomes.sql`)
 - **Metric:** % of Users Achieving Clinical Success  
 - **What it Measures:** Users weight loss journey is  improving  or not.Compare initial status  with every month status and decide.
 
 
-### 2️⃣ Monthly Retention Cohorts (`fct_monthly_retention_cohorts.sql`)
+### 2 Monthly Retention Cohorts (`fct_monthly_retention_cohorts.sql`)
 - **Metric:** Retention Rate per Month  
 - **What it Measures:** Tracks active users month-over-month from their first measurement  
 
 
-### 3️⃣ Gender Health Distribution (`fct_gender_monthly_health_distribution.sql`)
+### 3 Gender Health Distribution (`fct_gender_monthly_health_distribution.sql`)
 - **Metric:** Average BMI by Gender  
 - **What it Measures:** BMI and weight loss trends by gender and program week  
 
 
-### 4️⃣ Weight Loss Velocity Analysis (`fct_weight_loss_analysis.sql`)
+### 4 Weight Loss Velocity Analysis (`fct_weight_loss_analysis.sql`)
 - **Metric:** Average KG Lost per Week  
  
 
-### 5️⃣ Member Monthly Snapshot (`member_month.sql`)
+### 5 Member Monthly Snapshot (`member_month.sql`)
 - **Metric:** Current Status / Ending BMI  
 - **What it Measures:** User weight, BMI, and change at the end of each month  
 

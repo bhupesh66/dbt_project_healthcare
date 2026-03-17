@@ -26,7 +26,7 @@ WITH height_fix as (
     ) where  rn = 1
 ),
 
-new_measurements AS (
+new_measurements as (
     select 
         m.analytics_id,
         m.measurement_value as current_weight,
