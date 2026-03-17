@@ -1,4 +1,4 @@
-# 🏥 Healthcare Analytics dbt Project: Weight Loss & BMI Transformation
+# Healthcare Analytics dbt Project: Weight Loss & BMI Transformation
 
 ## 📌 Project Overview
 This dbt project transforms raw patient measurement data into actionable clinical insights. It focuses on:
@@ -26,51 +26,44 @@ The project follows a modular dbt structure:
   The "Ground Truth" table.  
   Identifies the first valid weight and height for each user to establish a baseline.  
 
-### 3. Marts Layer (`models/marts/`)
+## 🌟 The Five Core Analytics Models
 
-- **fact_weight_and_bmi_progress:**  
-  Grain: *one row per user per week*  
-  - Calculates weekly BMI  
-  - Tracks cumulative weight change from baseline  
-
-- **fct_user_success_outcomes:**  
-  Measures clinical success  
-  - **pct_clinical_success:** % users with ≥5% weight loss  
-  - **pct_category_improvement:** % users moving to a better BMI category  
-
-- **fct_monthly_retention_cohorts:**  
-  Cohort model tracking user retention month-over-month  
+In the **Marts layer**, raw data transforms into actionable business insights. We've designed **five specialized models** to answer key questions about user progress, health outcomes, and program engagement.  
 
 ---
 
-## 📈 Key Analytics Logic
-
-### 🧪 "Success" Definition
-
-We define success using two clinical lenses:
-
-#### 1. Relative Weight Loss
-
-
-(Current Weight - Initial Weight) / Initial Weight
-
-- A result **≤ -5%** is considered clinical success  
-
-#### 2. BMI Migration
-- Tracks transitions between BMI categories  
-- Example:
-
-- Obese Class II → Obese Class I
-
-- 
----
-
-### 🔁 Retention Logic
-
-- Users are grouped into **monthly cohorts** based on their first measurement date  
-- Retention is calculated by checking if users have at least **one weight log in future months** relative to Month 0  
+### 1️⃣ Clinical Success Outcomes (`fct_user_success_outcomes.sql`)
+- **Metric:** % of Users Achieving Clinical Success  
+- **What it Measures:** Tracks the percentage of users who hit the **gold standard of ≥5% weight loss** from their starting weight.  
+- **Why it Matters:** Shows stakeholders and health providers the **effectiveness of the program** in delivering meaningful health outcomes.  
 
 ---
+
+### 2️⃣ Monthly Retention Cohorts (`fct_monthly_retention_cohorts.sql`)
+- **Metric:** Retention Rate per Month  
+- **What it Measures:** Groups users by their “birth month” (Month 0) and checks who stays active (logs weight) in subsequent months.  
+- **Why it Matters:** Helps identify the **churn cliff** — the point when users typically stop engaging — so we can improve program stickiness.  
+
+---
+
+### 3️⃣ Gender Health Distribution (`fct_gender_monthly_health_distribution.sql`)
+- **Metric:** Average BMI by Gender  
+- **What it Measures:** Aggregates BMI categories and weight loss trends, broken down by gender and program week.  
+- **Why it Matters:** Reveals if certain demographic groups respond better, helping **tailor coaching and content** for maximum impact.  
+
+---
+
+### 4️⃣ Weight Loss Velocity Analysis (`fct_weight_loss_analysis.sql`)
+- **Metric:** Average KG Lost per Week  
+- **What it Measures:** Calculates the speed of weight loss, monitoring for healthy, sustainable progress versus risky crash-diets.  
+- **Why it Matters:** Flags **plateaus or unsafe trends**, ensuring users lose weight safely and consistently.  
+
+---
+
+### 5️⃣ Member Monthly Snapshot (`member_month.sql`)
+- **Metric:** Current Status / Ending BMI  
+- **What it Measures:** Captures where each user stands at the end of every month — final weight, BMI category, and total change.  
+- **Why it Matters:** Supports **financial reporting** and **monthly active user tracking**, helping the business plan and forecast accurately.  
 
 ## 🚀 How to Run This Project
 
