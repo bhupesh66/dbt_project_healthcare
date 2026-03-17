@@ -12,7 +12,7 @@ with base_data AS (
         f.initial_weight,
         f.bmi_category,
         
-        -- Lock in the first category for every user
+     
         FIRST_VALUE(f.bmi_category) OVER (
             PARTITION BY f.analytics_id 
             ORDER BY f.week_number ASC

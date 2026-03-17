@@ -16,7 +16,6 @@ WITH source AS (
 select
     gender,
     program_month,
-    -- Using NULLIF to prevent division by zero errors, though unlikely here
     ROUND(100 * COUNT(CASE WHEN bmi_category = 'Obese Class II' THEN 1 END) / COUNT(*), 1) AS obese_ii_percentage,
     ROUND(100 * COUNT(CASE WHEN bmi_category = 'Obese Class I' THEN 1 END) / COUNT(*), 1) AS obese_i_percentage,
     ROUND(100 * COUNT(CASE WHEN bmi_category = 'Overweight' THEN 1 END) / COUNT(*), 1) AS overweight_percentage,

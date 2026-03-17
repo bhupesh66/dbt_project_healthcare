@@ -1,3 +1,6 @@
+
+--member month 
+
 {{ config(
     materialized='table'
 ) }}
@@ -13,7 +16,7 @@ WITH monthly_snapshot_dates AS (
     
 ),
 
-member_status AS (
+member_status as (
     
     select
         analytics_id,
@@ -37,4 +40,3 @@ order by
     d.month_start_date ASC
 
 
-    
