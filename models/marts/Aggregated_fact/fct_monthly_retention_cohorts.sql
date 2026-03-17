@@ -15,7 +15,7 @@ WITH cohort_setup AS (
 ),
 
 activity AS (
-    -- Get every month where a user was active
+    
     SELECT DISTINCT 
         analytics_id, 
         DATE_TRUNC('month', measured_at) AS activity_month
@@ -24,7 +24,7 @@ activity AS (
 ),
 
 cohort_counts AS (
-    -- Join activity back to the "Birth Month"
+  
     SELECT
         c.cohort_month,
         DATEDIFF('month', c.cohort_month, a.activity_month) AS month_number,
@@ -38,7 +38,7 @@ SELECT
     cohort_month,
     month_number,
     active_customers,
-    -- Window function gets the size of Month 0 for each cohort to calculate the rate
+
     ROUND(active_customers * 100.0 / 
         MAX(active_customers) OVER (PARTITION BY cohort_month), 1) AS retention_rate
 FROM cohort_counts
