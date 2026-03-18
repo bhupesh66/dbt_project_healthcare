@@ -4,7 +4,7 @@
     materialized='table'
 ) }}
 
-with base_data AS (
+with base_data_initial AS (
    select
         f.analytics_id,
         FLOOR(f.week_number / 4) AS program_month,
@@ -13,11 +13,16 @@ with base_data AS (
         f.bmi_category,
         
      
-        FIRST_VALUE(f.bmi_category) OVER (
+        ROW_NUMBER() OVER (
             PARTITION BY f.analytics_id 
             ORDER BY f.week_number ASC
         ) AS starting_bmi_category
     from {{ ref('fact_weight_and_bmi_progress') }} f
+    
+),
+
+base_data as (
+select * from base_data where starting_bmi_category=1
 ),
 
 success_flags AS (

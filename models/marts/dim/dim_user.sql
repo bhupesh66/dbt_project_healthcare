@@ -18,15 +18,12 @@ WITH source_data AS (
     from {{ ref('users_stagging') }}
 ),
 
---This logic enables backfilling for late-arriving data. If a record arrives with a date earlier than the current maximum valid_from, this 30-day lookback window ensures those users are captured and their histories are correctly re-processed
+
 {% if is_incremental() %}
 users_to_update AS (
     select distinct analytics_id
     from source_data
-     where valid_from > (
-        select
-            DATEADD(day, -30, CAST(MAX(valid_from) AS TIMESTAMP_NTZ))
-        from {{ this }}
+     WHERE updated_at > (SELECT MAX(valid_from) FROM {{ this }})
     )
 ),
 {% endif %}
