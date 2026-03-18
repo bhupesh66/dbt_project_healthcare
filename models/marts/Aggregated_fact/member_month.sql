@@ -5,7 +5,7 @@
     materialized='table'
 ) }}
 
-WITH monthly_snapshot_dates AS (
+WITH dim_date AS (
     
     select
         date_key,
@@ -30,7 +30,7 @@ select
     d.month_name,
     d.year,
     COUNT(distinct m.analytics_id) as total_members
-from monthly_snapshot_dates d
+from dim_date d
 inner join member_status m
  on m.valid_from <= d.date_key and m.valid_to >= d.date_key
   where d.date_key = LAST_DAY(d.date_key)
