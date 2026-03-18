@@ -23,14 +23,14 @@ Marts/ gold layer id divided into two part one is fact and dim table and another
 
 The project follows a modular dbt structure:  
 
-### 1️⃣ Staging Layer (`models/staging/`)
+### Staging Layer (`models/staging/`)
 - **measurements_staging:** Cleans raw weight and height logs  
 - **users_staging:** Standardizes user metadata and demographics  
 
-### 2️⃣ Intermediate Layer (`models/intermediate/`)
+###  Intermediate Layer (`models/intermediate/`)
 - **user_initial_bmi:** Establishes the baseline for each user using their first valid weight and height  
 
-### 3️⃣ Marts / Core Layer
+###  Marts / Core Layer
 
 #### Star Schema
 
