@@ -30,7 +30,7 @@ success_flags AS (
 
 select 
     program_month,
-    ROUND(100 * SUM(has_improved_category) / COUNT(*), 1) AS pct_category_improvement,
+    ROUND(100 * SUM(has_improved_category) / COUNT(*), 1) AS improvement_percentage,
     ROUND(AVG(ABS(weight_change_kg)), 2) AS avg_kg_lost,
     COUNT(DISTINCT analytics_id) AS active_user_count
 from  success_flags
