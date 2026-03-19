@@ -18,9 +18,9 @@ activity AS (
     
     select distinct 
         analytics_id, 
-        DATE_TRUNC('month', measured_at) AS activity_month
-    from {{ ref('measurements_stagging') }}
-    where measurement_type = 'weight'
+        DATE_TRUNC('month',last_measurement_date_in_week) AS activity_month
+    from {{ ref('fact_weight_and_bmi_progress') }}
+  
 ),
 
 cohort_counts AS (
@@ -36,19 +36,17 @@ cohort_counts AS (
 ,
 cohort_sizes AS (
     -- Total users in Month 0 for each cohort
-    SELECT
+    select 
         cohort_month,
         COUNT(DISTINCT analytics_id) AS cohort_size
-    FROM cohort_setup
-    GROUP BY cohort_month
+    from cohort_setup
+    group by cohort_month
 )
 
-SELECT
+select 
     cc.cohort_month,
     cc.month_number,
     cc.active_customers,
-    ROUND(cc.active_customers * 100.0 / cs.cohort_size, 1) AS retention_rate
-FROM cohort_counts cc
-JOIN cohort_sizes cs
-    ON cc.cohort_month = cs.cohort_month
-ORDER BY cc.cohort_month, cc.month_number
+    ROUND(cc.active_customers * 100.0 / cs.cohort_size, 1) as retention_rate
+from  cohort_counts cc join cohort_sizes cs on cc.cohort_month = cs.cohort_month
+order by  cc.cohort_month, cc.month_number

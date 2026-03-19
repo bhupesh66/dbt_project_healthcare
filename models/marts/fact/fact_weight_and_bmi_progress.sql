@@ -44,7 +44,7 @@ new_measurements as (
     and m.measured_at > (select MAX(last_measurement_date_in_week) from {{ this }})
     {% endif %}
 ),
---This is needed to make a week non redundent because one user can measure their weight mutiple times in a single week so it takes most latest one
+--This logic is needed to make a week non redundent because one user can measure their weight mutiple times in a single week so it takes most latest one
 
 weekly_deduped AS (
     select

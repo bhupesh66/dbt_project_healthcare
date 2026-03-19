@@ -23,9 +23,9 @@ WITH source_data AS (
 users_to_update AS (
     select distinct analytics_id
     from source_data
-     WHERE updated_at > (SELECT MAX(valid_from) FROM {{ this }})
+     WHERE valid_from > (SELECT MAX(valid_from) FROM {{ this }})
     )
-),
+,
 {% endif %}
 
 versioning AS ( 
