@@ -3,20 +3,21 @@
 
 {{ config(materialized='view') }}
 
-WITH raw_users AS (
+with  raw_users AS (
     
-    select distinct * FROM ASSIGNMENT_YZN.RAW.USERS --raw table 
+        select distinct * from ASSIGNMENT_YZN.RAW.USERS --raw table 
 )
 
 select 
     analyticsId AS analytics_id,
-    organizationId AS organization_id,
+    organizationId,
     -- since snowflake is creating problem to parse utc keywoard
-    TRY_TO_TIMESTAMP_NTZ(REPLACE(updated, ' UTC', '')) AS updated_at,
+    TRY_TO_TIMESTAMP_NTZ (REPLACE(updated, ' UTC', '')) AS updated_at,
+    
     TRY_TO_TIMESTAMP_NTZ(REPLACE(created, ' UTC', '')) AS created_at,
-    gender, zipCode AS zip_code,
-    cast(birthdate AS DATE) AS birth_date,
+    gender, zipCode,
+    cast(birthdate  as date) as birthdate,
     status,
-    COALESCE(removed, FALSE) AS is_removed,
-    visible AS is_visible
-FROM raw_users
+    COALESCE(removed, FALSE) as is_removed,
+    visible 
+FROM raw_users  where  visible=TRUE
