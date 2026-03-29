@@ -13,11 +13,14 @@ select
     organizationId,
     -- since snowflake is creating problem to parse utc keywoard
     TRY_TO_TIMESTAMP_NTZ (REPLACE(updated, ' UTC', '')) AS updated_at,
-    
+
     TRY_TO_TIMESTAMP_NTZ(REPLACE(created, ' UTC', '')) AS created_at,
     gender, zipCode,
     cast(birthdate  as date) as birthdate,
     status,
     COALESCE(removed, FALSE) as is_removed,
     visible 
-FROM raw_users  where  visible=TRUE
+FROM raw_users  
+--where  visible=TRUE
+
+

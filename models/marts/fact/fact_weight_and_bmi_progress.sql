@@ -89,10 +89,10 @@ case
        else 'underweight' end as  bmi_category,
     (ROW_NUMBER() over (partition by  analytics_id ORDER BY week_number) - 1) AS measurement_sequence,
      ROUND(current_weight - initial_weight, 2) AS cummulatives_weight_change,
-    COALESCE(
-        ROUND(current_weight - lag(current_weight) over (partition by analytics_id order by week_number), 2),
-        ROUND(current_weight - initial_weight, 2)
-    ) as delta_incremental_change,
+    
+    ROUND(current_weight - lag(current_weight) over (partition by analytics_id order by week_number), 2)
+        
+     as delta_incremental_change,
     measured_at AS last_measurement_date_in_week
  from weekely_dedup
   where latest_in_week = 1

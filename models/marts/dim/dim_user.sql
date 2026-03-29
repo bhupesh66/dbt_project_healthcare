@@ -22,7 +22,9 @@ affected_users as (
     birthdate,
     status,
     created_at,
-    updated_at as valid_from 
+    updated_at as valid_from ,
+    is_removed,
+    visible ,
     from 
     {{ref('users_stagging')}} where analytics_id  in (select analytics_id  from new_records)
 )
@@ -37,6 +39,8 @@ versioning as (
     s.status,
     s.created_at,
     s.valid_from ,
+    s.visible ,
+    s. is_removed,
     row_number() over (
         partition by s.analytics_id
         order by s.valid_from ASC
@@ -55,9 +59,10 @@ select
  gender,
  zipCode,
  birthdate,
+visible ,
+ is_removed,
  created_at,
  valid_from,
  COALESCE(valid_to,'9999-12-31'::timestamp_ntz) as valid_to,
  case when valid_to is null then TRUE else FALSE end as is_current
  from versioning
-
