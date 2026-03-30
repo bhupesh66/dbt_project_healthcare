@@ -6,7 +6,10 @@
 WITH raw_measurements AS 
 (
     
-        select distinct * from  ASSIGNMENT_YZN.RAW.MEASUREMENTS
+        select  *,ROW_NUMBER() OVER (
+            PARTITION BY id 
+            ORDER BY updated DESC
+        ) as version_rank from  ASSIGNMENT_YZN.RAW.MEASUREMENTS
 )
 
 select
@@ -19,7 +22,7 @@ select
     TRY_TO_TIMESTAMP(REPLACE(measured, ' UTC', '')) AS measured_at,
     visible 
 from raw_measurements
-where measurement_value is not null and visible=TRUE
+where version_rank = 1 and measurement_value is not null and visible=TRUE
 
 
 
