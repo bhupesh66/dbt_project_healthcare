@@ -11,7 +11,7 @@ WITH dim_date AS (
         date_key,
         month_name,
         year,
-        DATE_TRUNC('month', date_key) AS month_start_date
+        month_int,
     from {{ ref('date_dim') }}
     where date_key <= CURRENT_DATE()
     
@@ -38,8 +38,8 @@ inner join member_status m
  on m.valid_from <= d.date_key and m.valid_to > d.date_key
   where d.date_key = LAST_DAY(d.date_key)
 group by
-    d.month_name, d.year, d.month_start_date
+    d.month_name, d.year, d.month_int
 order by 
-    d.month_start_date ASC
+    d.year,d.month_int ASC
 
 

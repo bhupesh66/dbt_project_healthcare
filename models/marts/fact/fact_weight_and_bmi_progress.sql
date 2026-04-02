@@ -5,21 +5,7 @@
 )}}
 
 
-with height_fix as 
-(
-    select 
-    analytics_id,
-    initial_height
-    from (
-        select
-         analytics_id,
-        initial_height,
-        row_number()over (partition by analytics_id order by 
-        initial_bmi_date desc) as rn 
-        from {{ ref('user_initial_bmi') }}
-    ) where rn=1
-),
-new_records as (
+with new_records as (
     select distinct analytics_id 
     from {{ref('measurements_stagging')}}
 
@@ -35,19 +21,14 @@ new_measurements as (
     m.measurement_value as current_weight,
     m.measured_at,
     i.initial_weight,
-    h.initial_height,
+    i.initial_height,
     i.initial_bmi_date ,
     DATEDIFF(week,i.initial_bmi_date,m.measured_at) as week_number
      from {{ ref('measurements_stagging') }} m
      inner join {{ ref('user_initial_bmi') }} i  on 
      m.analytics_id = i.analytics_id 
-     inner join 
-     height_fix h 
-     ON
-     m.analytics_id = h.analytics_id 
      where
      m.measurement_type = 'weight'
-     
      and m.analytics_id 
       in 
       (select analytics_id  from new_records)
