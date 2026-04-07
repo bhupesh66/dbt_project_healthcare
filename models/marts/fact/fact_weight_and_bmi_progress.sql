@@ -10,7 +10,7 @@ with new_records as (
     from {{ref('measurements_stagging')}}
 
 {% if is_incremental() %}
-    where measured_at  > (select MAX(last_measurement_date_in_week) from {{this}})
+    where updated  > (select MAX(last_updated_at) from {{this}})
 {% endif %})
 ,
 
@@ -23,6 +23,8 @@ new_measurements as (
     i.initial_weight,
     i.initial_height,
     i.initial_bmi_date ,
+    m.updated,
+     m.visible, 
     DATEDIFF(week,i.initial_bmi_date,m.measured_at) as week_number
      from {{ ref('measurements_stagging') }} m
      inner join {{ ref('user_initial_bmi') }} i  on 
@@ -45,14 +47,17 @@ weekely_dedup as (
      initial_weight,
      (initial_height / 100.0) as height_m,
      measured_at,
+     updated,
+     visible,
     row_number() over (
         partition by 
         analytics_id,
         week_number 
-         order by 
-        measured_at DESC
+         ORDER BY 
+            CASE WHEN visible = TRUE THEN 1 ELSE 0 END DESC,
+            measured_at DESC,updated
      ) as latest_in_week
-     from new_measurements
+     from new_measurements 
 )
 
 select 
@@ -61,6 +66,8 @@ analytics_id,
 week_number,
 current_weight,
 initial_weight,
+updated AS last_updated_at,
+ visible,
 round(current_weight / (height_m * height_m), 2) AS current_bmi,
 case 
        when (current_weight /  (height_m * height_m)) >= 35 then 'Obese Class II'
@@ -76,7 +83,7 @@ case
      as delta_incremental_change,
     measured_at AS last_measurement_date_in_week
  from weekely_dedup
-  where latest_in_week = 1
+ where latest_in_week = 1
 
 
 

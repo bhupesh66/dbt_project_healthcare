@@ -64,5 +64,11 @@ visible ,
  created_at,
  valid_from,
  COALESCE(valid_to,'9999-12-31'::timestamp_ntz) as valid_to,
- case when valid_to is null then TRUE else FALSE end as is_current
+ case when valid_to is null then TRUE else FALSE end as is_current,
+max(
+    case 
+        when CAST(is_removed AS STRING) != 'false' AND is_removed IS NOT NULL then 1
+        else 0
+    end
+) over (partition by analytics_id) = 1 as is_deleted
  from versioning

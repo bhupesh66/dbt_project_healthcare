@@ -17,12 +17,13 @@ select
     userAnalyticsId as analytics_id,
     type as  measurement_type,
     unit,
+    updated,
     value  AS measurement_value,
       -- since snowflake is creating problem to parse utc keyword
     TRY_TO_TIMESTAMP(REPLACE(measured, ' UTC', '')) AS measured_at,
     visible 
 from raw_measurements
-where version_rank = 1 and measurement_value is not null and visible=TRUE
+where version_rank = 1 
 
 
 
