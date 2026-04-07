@@ -11,8 +11,9 @@ with base_data AS (
         f.delta_incremental_change,
         f.cummulatives_weight_change,
         f.initial_weight,
-        f.bmi_category
-,FIRST_VALUE(f.bmi_category) OVER (
+        f.bmi_category,
+        
+FIRST_VALUE(f.bmi_category) OVER (
             PARTITION BY f.analytics_id 
             ORDER BY f.week_number ASC
         ) AS starting_bmi_category,

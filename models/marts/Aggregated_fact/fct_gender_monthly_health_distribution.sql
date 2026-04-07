@@ -9,6 +9,7 @@ WITH unique_users AS (
     FROM {{ ref('dim_user') }} where is_deleted=FALSE
 ),
 
+
 monthly_logs AS (
     SELECT 
         u.gender,
