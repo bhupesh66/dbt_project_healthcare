@@ -25,7 +25,7 @@ first_height as (
     measured_at as height_date,
     row_number() over 
     ( partition by analytics_id 
-        order by measured_at desc
+        order by measured_at asc
     ) as rn from {{ref('measurements_stagging')}}
     where measurement_type='height' and visible = TRUE
 )

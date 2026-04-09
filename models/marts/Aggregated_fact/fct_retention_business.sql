@@ -1,6 +1,8 @@
 -- User business retention by cohort
+
+--Of the 100 users who joined in Jan, how many are still paying members in Feb, Mar, Apr…?”
 {{ config(
-    materialized='table'
+    materialized='view'
 ) }}
 
 WITH cohort_setup AS (

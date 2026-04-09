@@ -1,3 +1,7 @@
+
+--GRAIN:one record per user per week.
+
+
 {{config(
     materialized='incremental',
     unique_key='user_week_id',
@@ -49,6 +53,8 @@ weekely_dedup as (
      measured_at,
      updated,
      visible,
+     avg(current_weight) over (partition by analytics_id, week_number) as avg_weight_in_week,
+
     row_number() over (
         partition by 
         analytics_id,
@@ -65,6 +71,7 @@ user_week_id,
 analytics_id,
 week_number,
 current_weight,
+avg_weight_in_week,
 initial_weight,
 updated AS last_updated_at,
  visible,

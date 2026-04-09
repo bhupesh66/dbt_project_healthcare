@@ -1,5 +1,5 @@
 {{ config(
-    materialized='table'
+    materialized='view'
 ) }}
 
 WITH unique_users AS (

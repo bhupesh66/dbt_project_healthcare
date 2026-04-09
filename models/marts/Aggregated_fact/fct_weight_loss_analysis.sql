@@ -1,7 +1,7 @@
 --Weekly Weight Loss Analysis.We can also calculate Year-Over-Year (YoY) Cohort Analysis if needed.
 
 {{ config(
-    materialized='table'
+    materialized='view'
 ) }}
 
 select 

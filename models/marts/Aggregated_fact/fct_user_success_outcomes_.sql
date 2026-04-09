@@ -1,7 +1,7 @@
 --Overall User Health Transformation: Monthly Success Milestones
 
 {{ config(
-    materialized='table'
+    materialized='view'
 ) }}
 
 with base_data AS (
